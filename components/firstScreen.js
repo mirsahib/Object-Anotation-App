@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View,Button,Alert} from 'react-native';
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 
-export default function firstScreen() {
+export default function firstScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Instruction</Text>
@@ -9,9 +9,22 @@ export default function firstScreen() {
             <Text style={styles.titleText}>Step 2:</Text><Text>Label the image</Text>
             <Text style={styles.titleText}>Step 3:</Text><Text>Save</Text>
             <Button
-                title="Get Started"
-                onPress={() => Alert.alert('Simple Button pressed')}
+                title="Go to Second"
+                onPress={() => navigation.navigate('secondScreen')}
             />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    titleText: {
+        fontSize: 20,
+        fontWeight: "bold"
+    }
+});
