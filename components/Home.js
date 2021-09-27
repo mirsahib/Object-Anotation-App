@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 
-export default function firstScreen({ navigation }) {
+export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>Instruction</Text>
@@ -10,7 +10,7 @@ export default function firstScreen({ navigation }) {
             <Text style={styles.titleText}>Step 3:</Text><Text>Save</Text>
             <Button
                 title="Go to Second"
-                onPress={() => navigation.navigate('secondScreen')}
+                onPress={() => navigation.navigate('Camera')}
             />
         </View>
     )

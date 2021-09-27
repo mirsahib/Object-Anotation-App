@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import firstScreen from './firstScreen'
-import secondScreen from './secondScreen'
+import Home from './Home'
+import CameraScreen from './CameraScreen'
 
 
 
@@ -11,8 +11,8 @@ export default function AppContainer() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="firstScreen" component={firstScreen} />
-                <Stack.Screen name="secondScreen" component={secondScreen} />
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Camera" component={CameraScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     )
