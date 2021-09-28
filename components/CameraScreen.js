@@ -1,62 +1,96 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
+import * as Permissions from 'expo-permissions';
+import * as MediaLibrary from 'expo-media-library';
 
 
 export default function CameraScreen({ navigation }) {
-  const [startCamera, setStartCamera] = React.useState(false)
-  const __startCamera =async () => {
-    const { status } = await Camera.requestPermissionsAsync()
-    if (status === 'granted') {
-      // do something
+  
+  const [camera,setCamera] = useState(null)
+  const [imageUri,setImageUri] = useState(null)
 
-    } else {
-      Alert.alert("Access denied")
+  useEffect(() => {
+    permission()
+    console.log("image uri is",imageUri)
+    if(imageUri!=null){
+      savePicture()
     }
+  },[imageUri])
+
+  const permission = async ()=>{
+    const { status } = await Camera.requestPermissionsAsync()
+      if (status != 'granted') {
+        Alert.alert("Access denied")
+        //unmount component
+      }
   }
+
+  const takePicture = async ()=>{
+    const photo = await camera.takePictureAsync()
+    setImageUri(photo.uri)
+  }
+
+  const savePicture = async ()=>{
+    const status = await MediaLibrary.requestPermissionsAsync()
+    if(status.granted){
+      const assert = await MediaLibrary.createAssetAsync(imageUri)
+      const result = await MediaLibrary.createAlbumAsync('Grocery',assert,true)
+      setImageUri(null)
+      console.log("image ",result)
+    }
+    // if(status === 'granted'){
+    //   const assert = MediaLibrary.createAssetAsync(imageUri)
+    //   const result = await MediaLibrary.createAlbumAsync('Grocery',assert)
+    //   console.log("image ",result)
+    // }else{
+    //   Alert.alert("You don't have any access")
+    // }
+  }
+
 
   return (
     <View style={styles.container}>
-      {startCamera ? (
-        <Camera
-          style={{flex: 1,width:"100%"}}
-          ref={(r) => {
-            camera = r
-          }}
-        ></Camera>
-      ) : (
+
+      <Camera
+        style={{ flex: 1, width: "100%" }}
+        ref={(r) => {
+          setCamera(r)
+        }}
+      >
         <View
           style={{
+            position: 'absolute',
+            bottom: 0,
+            flexDirection: 'row',
             flex: 1,
-            backgroundColor: '#fff',
-            justifyContent: 'center',
-            alignItems: 'center'
+            width: '100%',
+            padding: 20,
+            justifyContent: 'space-between'
           }}
         >
-          <TouchableOpacity
-            onPress={__startCamera}
+          <View
             style={{
-              width: 130,
-              borderRadius: 4,
-              backgroundColor: '#14274e',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 40
+              alignSelf: 'center',
+              flex: 1,
+              alignItems: 'center'
             }}
           >
-            <Text
+            <TouchableOpacity
+            onPress={takePicture}
               style={{
-                color: '#fff',
-                fontWeight: 'bold',
-                textAlign: 'center'
+                width: 70,
+                height: 70,
+                bottom: 0,
+                borderRadius: 50,
+                backgroundColor: '#fff'
               }}
-            >
-              Take picture
-            </Text>
-          </TouchableOpacity>
+            />
+          </View>
         </View>
-      )}
+
+      </Camera>
+
     </View>
   );
 }
