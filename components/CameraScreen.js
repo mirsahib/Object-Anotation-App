@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as Permissions from 'expo-permissions';
-import * as MediaLibrary from 'expo-media-library';
+
 
 
 export default function CameraScreen({ navigation }) {
@@ -14,7 +13,9 @@ export default function CameraScreen({ navigation }) {
     permission()
     console.log("image uri is",imageUri)
     if(imageUri!=null){
-      savePicture()
+      navigation.navigate('Label',{
+        uri:imageUri
+      })
     }
   },[imageUri])
 
@@ -31,22 +32,7 @@ export default function CameraScreen({ navigation }) {
     setImageUri(photo.uri)
   }
 
-  const savePicture = async ()=>{
-    const status = await MediaLibrary.requestPermissionsAsync()
-    if(status.granted){
-      const assert = await MediaLibrary.createAssetAsync(imageUri)
-      const result = await MediaLibrary.createAlbumAsync('Grocery',assert,true)
-      setImageUri(null)
-      console.log("image ",result)
-    }
-    // if(status === 'granted'){
-    //   const assert = MediaLibrary.createAssetAsync(imageUri)
-    //   const result = await MediaLibrary.createAlbumAsync('Grocery',assert)
-    //   console.log("image ",result)
-    // }else{
-    //   Alert.alert("You don't have any access")
-    // }
-  }
+ 
 
 
   return (
