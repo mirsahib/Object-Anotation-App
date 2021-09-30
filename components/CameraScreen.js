@@ -11,11 +11,12 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     permission()
-    console.log("image uri is",imageUri)
+    //console.log("image uri is",imageUri)
     if(imageUri!=null){
       navigation.navigate('Label',{
         uri:imageUri
       })
+      //console.log("current ",imageUri)
     }
   },[imageUri])
 
@@ -28,8 +29,9 @@ export default function CameraScreen({ navigation }) {
   }
 
   const takePicture = async ()=>{
-    const photo = await camera.takePictureAsync()
-    setImageUri(photo.uri)
+    const option =  { quality: 0.7, base64: true };
+    const photo = await camera.takePictureAsync(option)
+    setImageUri(photo.base64)
   }
 
  
