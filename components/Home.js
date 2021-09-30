@@ -10,7 +10,7 @@ export default function Home({ navigation }) {
             <Text style={styles.titleText}>Step 3:</Text><Text>Save</Text>
             <Button
                 title="Go to Second"
-                onPress={() => navigation.navigate('Label',{uri:"something"})}
+                onPress={() => navigation.navigate('Camera')}
             />
         </View>
     )
