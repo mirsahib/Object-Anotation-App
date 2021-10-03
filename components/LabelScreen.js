@@ -15,7 +15,7 @@ export default function LabelScreen({ route, navigation }) {
         value: 'pcs',
     }];
 
-    
+
     const handleOnChange = (name, value) => {
         setData({ ...data, [name]: value })
     }
@@ -34,7 +34,7 @@ export default function LabelScreen({ route, navigation }) {
                 }else{
                     console.log('Saving data failed',annotationData)
                 }
-           }
+            }
         } catch (error) {
             console.log("form handleSubmit",error)
         }
@@ -67,6 +67,11 @@ export default function LabelScreen({ route, navigation }) {
     )
 }
 const styles = StyleSheet.create({
+    item: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 1
+    },
     input: {
         height: 40,
         margin: 12,
