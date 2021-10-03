@@ -1,14 +1,13 @@
-import { View, Text, TextInput, StyleSheet, Button } from "react-native";
-import React, { useState, useEffect } from 'react';
-import * as MediaLibrary from 'expo-media-library';
+import { View, TextInput, StyleSheet, Button } from "react-native";
+import React, { useState } from 'react';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
-import { SECRET } from "../config";
+import {uploadImage,create} from "../helper/uploadImage";
 
 
 export default function LabelScreen({ route, navigation }) {
     const { uri } = route.params
-    const [data, setData] = useState({ className: "", productName: "", MeasuringUnit: "" })
-    const measuringUnit = [{
+    const [data, setData] = useState({ className: "", productName: "", measuredUnit: "" })
+    const measuredUnit = [{
         value: 'kg/g',
     }, {
         value: 'l/ml',
@@ -22,29 +21,23 @@ export default function LabelScreen({ route, navigation }) {
     }
 
     const handleSubmit = async () => {
-        let apiUrl = `https://api.cloudinary.com/v1_1/${SECRET}/image/upload`
-        let base64Img = `data:image/jpg;base64,${uri}`
-        let imageData = { file: base64Img, upload_preset: "annotationImage" }
-        //console.log("image data", imageData)
-        try{
-            let result = await fetch(apiUrl,{
-                method:"POST",
-                body:JSON.stringify(imageData),
-                headers:{'content-type': 'application/json'}
-            })
-            //console.log("result",result)
-            let response = await result.json()
-            console.log(response)
-        }catch(err){
-            console.log("error",err)
+        try {
+            // upload image
+            let imageData = await uploadImage(uri)
+            // check image saved successfully
+            if(imageData!=undefined){
+                data.image = imageData.public_id
+                //save data to mongodb
+                let annotationData = await create(data)
+                if(annotationData.error===undefined){
+                    console.log('Successfully saved data',annotationData)
+                }else{
+                    console.log('Saving data failed',annotationData)
+                }
+           }
+        } catch (error) {
+            console.log("form handleSubmit",error)
         }
-
-
-        // save image using cloudlinarly api
-        // check image saved successfully
-        //save data with image public id using mongodb realm webhook
-        //false show error
-
     }
 
     return (
@@ -63,8 +56,8 @@ export default function LabelScreen({ route, navigation }) {
                 icon='chevron-down'
                 iconColor='#E1E1E1'
                 label='Measuring Unit'
-                onChangeText={e => handleOnChange("MeasuringUnit", e)}
-                data={measuringUnit}
+                onChangeText={e => handleOnChange("measuredUnit", e)}
+                data={measuredUnit}
             />
             <Button
                 title="Save"
